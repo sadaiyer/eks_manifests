@@ -4,6 +4,7 @@ arn:aws:sts::854394523447:assumed-role/eks-admin-role-for-cloud9/i-01dea760482e4
 
 Launch your cluster now
 Check all the cluster roles and cluster role bindings create
+
     k get clusterrole
     k get clusterrolebinding
 
@@ -13,6 +14,7 @@ Create a user - eksdev or eksview in IAM, get the IAM user ARN
 Get the SA/SAK so you can test it
 
 Back in Cloud9 (after you have created your cluster)
+
     eksctl get iamidentitymapping --cluster eks-demo --region us-west-1
 
 will show mapping from cm
@@ -25,6 +27,7 @@ will show mapping from cm
 
 To test,
 create a new profile use aws configure
+
     aws configure --profile eksdev
 
     aws eks update-kubeconfig --name eks-demo --profile eksdev
