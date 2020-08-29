@@ -96,10 +96,9 @@ Regenerate kubeconfig
 Concept: Since a POD is like a node, it inherits the IAM role attached to the node.  That gives it privileged access which is not required for the POD.
 
 Using kube2iam, you can control that by doing the following
-- Create an IAM role for the POD (based on the AWS services it needs to access)
-- At the namespace level (the pod namespace), create an annotation by referencing the role
-- In the deployment definition, reference the same role via an annotation
-
+Create an IAM role for the POD (based on the AWS services it needs to access)
+At the namespace level (the pod namespace), create an annotation by referencing the role
+In the deployment definition, reference the same role via an annotation
 
     kcf kube2iam.yaml
 
