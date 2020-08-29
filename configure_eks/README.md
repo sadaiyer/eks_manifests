@@ -49,6 +49,7 @@ create a new profile use aws configure
 
 
 =====Instructions to map ROLE to a service account====
+
 The next command will create serviceAccount: dev and bind to ClusterRole "view"
 
     kcf role_binding.yaml
@@ -87,6 +88,60 @@ Regenerate kubeconfig
     kubectl create namespace dev
 
 
+
+
+
+=====Instructions to install kube2iam and use it ======
+
+Concept: Since a POD is like a node, it inherits the IAM role attached to the node.  That gives it privileged access which is not required for the POD.
+
+Using kube2iam, you can control that by doing the following
+- Create an IAM role for the POD (based on the AWS services it needs to access)
+- At the namespace level (the pod namespace), create an annotation by referencing the role
+- In the deployment definition, reference the same role via an annotation
+
+
+    kcf kube2iam.yaml
+
+    kgp -n utilities
+
+    k logs <podname> -n utilities
+
+Create a ns dev
+Create a role with S3 access - eks-dev-ns-role
+
+In the node role, grant AssumeRole via "sts"
+
+For the eks-dev-ns-role, create a trust with node role
+
+Now in the deploy.yaml for say, nginx, in dev namespace
+
+Before kube2iam, to test and verify the node attached to the POD
+
+exec into the POD, and install the utilities
+
+    apt-get update
+
+    apt-get install awscli -y
+
+    aws sts get-caller-identity
+
+NodeRole is visible, to change
+
+In the namespace dev, create an annotation
+metadata:
+
+   annotation:
+     iam.amazonaws.com/allowed-roles: |
+      ["eks-dev-ns-role ARN"]
+
+Similarly, in the deployment for nginx in namespace, dev
+metadata:
+
+   annotation:
+     iam.amazonaws.com/role: ["eks-dev-ns-role ARN"]
+
+    curl 169.254.169.254/latest/meta-data/iam/security-credentials
 
 
 
