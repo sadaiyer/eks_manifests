@@ -57,10 +57,14 @@ Node - Trust relationship
 
 eks-external-dns-role trusts node role
 
+In the external-dns.yaml file
+
 Annotate namespace - external-dns with the above role
   annotations:
      iam.amazonaws.com/allowed-roles: |
        ["eks-external-dns-role ARN"]
+
+Update --domain-filter=sadaiyer.com
 
 Under Ingress --> files are 
     external-dns.yaml
@@ -78,6 +82,8 @@ Now, deploy alb-ingress, check the annotations before you deploy
     kcf deployments/alb_ingress.yaml
 
 In the EKS cluster, edit the additional SG to add the LB security group.  This is a nuisance, so create a security group - alb-ingress-sg with inbound rules http and https (0.0.0.0/0), and now associate the new SG with the EKS cluster additional SG (all traffic)
+
+I created for me - sg-0471f895eb8dd0222, and now add in the "additional security group" for the EKS cluster a rule to allow access from "sg-0471f895eb8dd0222"
 
 With this new SG created, now associate via annotation in the ALB ingress (alb_ingress.yaml)  There are other annotations that can be configured as well.
 
