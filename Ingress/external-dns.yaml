@@ -1,4 +1,17 @@
 ---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-dns
+  labels:
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+  annotations:
+     iam.amazonaws.com/allowed-roles: |
+       ["arn:aws:iam::854394523447:role/eks-external-dns-role"]
+
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -55,7 +68,7 @@ spec:
       labels:
         app: external-dns
       annotations:
-        iam.amazonaws.com/role: arn:aws:iam::<YOUR_AWS_ACCOUNT>:role/eks-external-dns-role
+        iam.amazonaws.com/role: arn:aws:iam::854394523447:role/eks-external-dns-role
     spec:
       serviceAccountName: external-dns
       containers:
