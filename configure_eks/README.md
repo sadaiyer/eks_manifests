@@ -126,6 +126,8 @@ In the deployment definition, reference the same role via an annotation
 
     kcf kube2iam.yaml
 
+The kube2iam creates the necessary namespace, service account, cr and crb, along with a daemonset.
+
     kgp -n utilities
 
     k logs <podname> -n utilities
