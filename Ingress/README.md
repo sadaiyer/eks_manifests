@@ -13,9 +13,9 @@ Build trust relationship, copy the node role ARN and in the ALB role
 
     ,"AWS": "nodeRole ARN"
 
-In the namespace, annotate eks-alb-role ARN 
+In the namespace, ingress-nginx, annotate eks-alb-role ARN 
 
-Copy the eks-alb-role ARN and add annotation in the deployment to refer eks-alb-role ARN 
+Copy the eks-alb-role ARN and add annotation in the deployment, alb-ingress-controller.yaml, to refer eks-alb-role ARN 
 
     --aws-region=us-west-1
 
@@ -23,7 +23,7 @@ Copy the eks-alb-role ARN and add annotation in the deployment to refer eks-alb-
 
     kcf alb-ingress-controller.yaml
 
-When the controller gets deployed, the LB is not created, but when the ingress is created
+When the controller gets deployed, the LB is not created, but gets created when the ingress is created. As next step....
 
 
 =====ALB Ingress resource========
