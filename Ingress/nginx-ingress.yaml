@@ -6,6 +6,9 @@ metadata:
   labels:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
+  annotations:
+     iam.amazonaws.com/allowed-roles: |
+       ["arn:aws:iam::854394523447:role/eks-alb-role"]
 
 ---
 # Source: ingress-nginx/templates/controller-serviceaccount.yaml
