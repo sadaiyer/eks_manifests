@@ -20,18 +20,15 @@ Build trust relationship, copy the node role ARN in the ALB role
 
 In the NodeRole, (in the kube2iam lab) we have already provided AssumeRole in the prior steps.  To confirm, go the role, click Trust Relationships, and click Edit Trust Relationships
 
-In the namespace, ingress-nginx, annotate eks-alb-role ARN 
-   annotations:
-     iam.amazonaws.com/allowed-roles: |
-       ["eks-alb-role ARN"]
+
 
 Copy the eks-alb-role ARN and add annotation in the deployment, alb-ingress-controller.yaml, to refer eks-alb-role ARN 
 
 metadata:
 
    annotations:
-     iam.amazonaws.com/role: eks-dev-ns-role-ARN
-     
+     iam.amazonaws.com/role: eks-alb-role-ARN
+
     --aws-region=us-west-2
 
     kcf rbac-role.yaml
@@ -40,8 +37,18 @@ metadata:
 
 When the controller gets deployed, the LB is not created, but gets created when the ingress is created. As next step....
 
+The alb-ingress-controller gets created in the kube-system namespace, hence annotate this namespace
+
+In the namespace, kube-system, annotate eks-alb-role ARN 
+
+   annotations:
+     iam.amazonaws.com/allowed-roles: |
+       ["eks-alb-role ARN"]
+
+
 =====R53 External DNS configuration=======
 
+Create a namespace - external-dns (in our case, we edited the file and added to external-dns.yaml)
 Ingress creates LB - Route53 - points to this LB.  This section will discuss automatic configuration of R53-->LB-->ALB IC
 
 Create an IAM role - eks-external-dns-role (route53 access)
@@ -51,8 +58,11 @@ Node - Trust relationship
 eks-external-dns-role trusts node role
 
 Annotate namespace - external-dns with the above role
+  annotations:
+     iam.amazonaws.com/allowed-roles: |
+       ["eks-external-dns-role ARN"]
 
-Under Ingres --> files are 
+Under Ingress --> files are 
     external-dns.yaml
 
 =====ALB Ingress resource========
