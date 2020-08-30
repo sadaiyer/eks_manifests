@@ -32,31 +32,31 @@ Review the clusterrolebinding called "view" since this is used in the user_bindi
 
     kcf user_binding.yaml
     
-In the AWS console, create an IAM user - "eksdev" in IAM, get the IAM user ARN
+In the AWS console, create an IAM user - "eksdev" in IAM, provide "AmazonEKSWorkerNodePolicy" get the IAM user ARN
 Get the SA/SAK so you can test it
 
 Back in Cloud9 (after you have created your cluster)
 
 To view configmap, "aws-auth"
 
-    eksctl get iamidentitymapping --cluster eks-demo --region us-west-1
+    eksctl get iamidentitymapping --cluster eks-demo --region us-west-2
 
 Now update the configmap, aws-auth, with the newly created username ARN
 
-    eksctl create iamidentitymapping --cluster eks-demo --region us-west-1 --arn "<EnterARN>" --username dev
+    eksctl create iamidentitymapping --cluster eks-demo --region us-west-2 --arn "<EnterARN>" --username dev
 
-    eksctl get iamidentitymapping --cluster eks-demo --region us-west-1
+    eksctl get iamidentitymapping --cluster eks-demo --region us-west-2
 
 Verify that the configmap got updated,
 
-    kubectl get cm $KN -o yaml
+    kubectl get cm aws-auth $KN -o yaml
 
 To test,
 create a new profile use aws configure
 
     aws configure --profile eksdev
 
-    aws eks update-kubeconfig --name eks-demo --profile eksdev
+    aws eks update-kubeconfig --name eks-demo --profile eksdev --region us-west-2
 
     kgs
 
@@ -66,7 +66,7 @@ create a new profile use aws configure
 
     kubectl create namespace dev
 
-kgn (not sure why this errors out!, Giri and I are assuming that AWS deliberately did not give privileges to view nodes given that its managed) and creating namespace will error out.
+Creating namespace will error out since this is a "view" user
 
 
 
@@ -83,23 +83,23 @@ Create a new IAM ROLE in AWS, call it, no policy required
 
 Get the ARN of the ROLE
 
-Establish trust between eks-dev-role and user created from previous step - eksdev
+Establish trust between eks-dev-role (EC2 service) and user created from previous step - eksdev
 
 For the user "eksdev" grant it AssumeRole policy via the "sts" service
 
 Now edit the cm in kube-system namespace, use the ARN of the ROLE
 
-    eksctl create iamidentitymapping --cluster eks-demo --region us-west-1 --arn "<roleARN>" --username system:serviceaccount:kube-system:dev --group system:serviceaccount:kube-system
+    eksctl create iamidentitymapping --cluster eks-demo --region us-west-2 --arn "<roleARN>" --username system:serviceaccount:kube-system:dev --group system:serviceaccount:kube-system
 
-    kubectl get cm $KN -o yaml    
+    kubectl get cm aws-auth $KN -o yaml    
 
 To delete the previous user arn, use the following command (no need to delete!)
     
-    eksctl delete iamidentitymapping --cluster eks-demo --region us-west-1 --arn "userARN"
+    eksctl delete iamidentitymapping --cluster eks-demo --region us-west-2 --arn "userARN"
 
 Regenerate kubeconfig
 
-    aws eks update-kubeconfig --name eks-demo --role-arn "roleARN" --profile eksdev
+    aws eks update-kubeconfig --name eks-demo --role-arn "roleARN" --profile eksdev --region us-west-2
 
     kgs
 
@@ -109,8 +109,7 @@ Regenerate kubeconfig
 
     kubectl create namespace dev
 
-
-
+kgn above gives error, as well as create namespace
 
 =====Instructions to install kube2iam and use it ======
 
@@ -134,7 +133,9 @@ The kube2iam creates the necessary namespace, service account, cr and crb, along
 
 Create a ns dev
 
-Create a role with S3 access - eks-dev-ns-role
+    k create namespace dev
+
+Create a role (service: EC2) with S3 access - eks-dev-ns-role
 
 In the node role, grant AssumeRole via "sts"
 
@@ -157,15 +158,18 @@ NodeRole is visible, to change
 In the namespace dev, create an annotation
 metadata:
 
-   annotation:
+   annotations:
      iam.amazonaws.com/allowed-roles: |
-      ["eks-dev-ns-role ARN"]
+       ["eks-dev-ns-role ARN"]
 
-Similarly, in the deployment for nginx in namespace, dev
+    k get ns dev -o yaml
+
+Similarly, in the deployment for nginx in namespace, dev.  This needs to be added at the POD level definition in the deployment.
+
 metadata:
 
-   annotation:
-     iam.amazonaws.com/role: ["eks-dev-ns-role ARN"]
+   annotations:
+     iam.amazonaws.com/role: eks-dev-ns-role-ARN
 
     curl 169.254.169.254/latest/meta-data/iam/security-credentials
 

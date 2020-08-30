@@ -17,7 +17,7 @@ In the namespace, ingress-nginx, annotate eks-alb-role ARN
 
 Copy the eks-alb-role ARN and add annotation in the deployment, alb-ingress-controller.yaml, to refer eks-alb-role ARN 
 
-    --aws-region=us-west-1
+    --aws-region=us-west-2
 
     kcf rbac-role.yaml
 

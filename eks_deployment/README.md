@@ -54,8 +54,8 @@ managedNodeGroups:
         cloudWatch: true
         albIngress: true
  
-eksctl create cluster -f my_eksctl_ctl.yaml
+eksctl create cluster -f my_eksctl_eks.yaml
  
-eksctl scale nodegroup --cluster=eks-demo —name=eks-ng —nodes=4 —nodes-min=2 —nodes-max=2 —region=us-west-2
+eksctl scale nodegroup --cluster=eks-demo —-name=eks-ng —-nodes=2 —-nodes-min=2 —-nodes-max=2 —-region=us-west-2
  
-eksctl delete cluster -f my_eksctl_ctl.yaml
+eksctl delete cluster -f my_eksctl_eks.yaml
