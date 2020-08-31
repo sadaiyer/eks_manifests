@@ -6,7 +6,7 @@ Ensure your role is the one that you created
 
 Launch your cluster now
 
-    eksctl create cluster -f my_eksctl_ctl.yaml
+    eksctl create cluster -f my_eksctl_eks.yaml
 
  To create the nodegroup:
 
@@ -14,7 +14,7 @@ Launch your cluster now
  
  To delete the cluster (cleanup):
 
-    eksctl delete cluster -f my_eksctl_ctl.yaml
+    eksctl delete cluster -f my_eksctl_eks.yaml
 
 
 
