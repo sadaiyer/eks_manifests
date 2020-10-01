@@ -2,15 +2,15 @@
 
 This document provides instructions to install a Kubernetes Cluster on AWS using the AWS EKSCTL utility
 
-# HEADER TEMPLATE
-## Sub-Heading
+# Install EKSCTL
+## Configure Cloud9 and then run the ekstcl commands to create cluster
 ### Note 
 
 <details><summary>show</summary>
 <p>
 
 ```bash
-Solution here.....
+https://github.com/sadaiyer/eks_manifests/tree/master/configure_eks
 ```
 </p>
 </details>
