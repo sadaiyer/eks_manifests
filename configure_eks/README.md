@@ -2,7 +2,7 @@ Launch cloud9
 
 Ensure your role is the one that you created 
 
-    arn:aws:sts::854394523447:assumed-role/eks-admin-role-for-cloud9/i-01dea760482e492f1
+    arn:aws:sts::<aws-account-num>:assumed-role/eks-admin-role-for-cloud9/i-01dea760482e492f1
 
 Launch your cluster now
 
