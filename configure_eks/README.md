@@ -4,7 +4,7 @@ Ensure your role is the one that you created
 
     arn:aws:sts::<aws-account-num>:assumed-role/eks-admin-role-for-cloud9/i-01dea760482e492f1
 
-Launch your cluster now
+Launch your cluster now - https://github.com/sadaiyer/eks_manifests/blob/master/eks_deployment/eksctl_eks.yaml or uploading here too...(Mar 14, 2021)
 
     eksctl create cluster -f my_eksctl_eks.yaml
 
