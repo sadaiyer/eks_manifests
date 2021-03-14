@@ -49,7 +49,7 @@ Launch your cluster now - https://github.com/sadaiyer/eks_manifests/blob/master/
 
  To create the nodegroup:
 
-    eksctl scale nodegroup --cluster=eks-demo —name=eks-ng —nodes=4 —nodes-min=2 —nodes-max=2 —region=us-west-2
+    eksctl scale nodegroup --cluster=eks-demo —-name=eks-ng —-nodes=4 —-nodes-min=2 —-nodes-max=2 —-region=us-west-2
  
  To delete the cluster (cleanup):
 
